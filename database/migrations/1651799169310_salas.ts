@@ -5,13 +5,13 @@ export default class Salas extends BaseSchema {
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
 
-      /**
-       * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
-       */
-      table.timestamp('created_at', { useTz: true })
-      table.timestamp('updated_at', { useTz: true })
+      table.increments('id')
+      table.integer('numero').notNullable().unsigned().unique().primary()
+      table.integer('capacidade').notNullable().unsigned()
+      table.boolean('disponivel').defaultTo(true)
+      table.string('professor_matricula').notNullable().references('professores.matricula')
+
     })
   }
 
