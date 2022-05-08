@@ -92,7 +92,7 @@ export default class AlunosController {
 
         const aluno = await Aluno.find(matricula);
         if(aluno){
-            aluno.delete();
+            await aluno.delete();
             return response.status(200).send({
                 mensagem: "Aluno excluído!"
             })

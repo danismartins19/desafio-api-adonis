@@ -1,9 +1,6 @@
-import Sala from './Sala';
 import {
   BaseModel,
-  column, 
-  manyToMany,
-  ManyToMany
+  column
 } from '@ioc:Adonis/Lucid/Orm'
 
 export default class Aluno extends BaseModel {
@@ -19,13 +16,4 @@ export default class Aluno extends BaseModel {
   @column()
   public data_nasc: string
 
-
-  @manyToMany(() => Sala, {
-    localKey: 'matricula',
-    pivotForeignKey: 'aluno_matricula',
-    relatedKey: 'numero',
-    pivotRelatedForeignKey: 'sala_numero',
-    pivotTable: 'aluno_sala'
-  })
-  public salas: ManyToMany<typeof Sala>
 }

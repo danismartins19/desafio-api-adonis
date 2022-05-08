@@ -90,7 +90,7 @@ export default class ProfessorsController {
 
         const professor = await Professor.find(matricula);
         if(professor){
-            professor.delete();
+            await professor.delete();
             return response.status(200).send({
                 mensagem: "Professor excluído!"
             })

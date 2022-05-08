@@ -1,5 +1,6 @@
-import { BaseModel, column, HasOne, hasOne } from '@ioc:Adonis/Lucid/Orm'
-import Professor from './Professor'
+import { BaseModel, BelongsTo, belongsTo, column, ManyToMany, manyToMany } from '@ioc:Adonis/Lucid/Orm'
+import Aluno from './Aluno';
+import Professor from './Professor';
 
 export default class Sala extends BaseModel {
   @column({ isPrimary: true })
@@ -11,7 +12,18 @@ export default class Sala extends BaseModel {
   @column()
   public disponivel: boolean
 
-  @hasOne(() => Professor)
-  public professor_matricula: HasOne<typeof Professor>
+  @column()
+  public professorMatricula: number
 
+  @belongsTo(() => Professor)
+  public professor: BelongsTo<typeof Professor>
+
+  @manyToMany(() => Aluno, {
+    localKey: 'numero',
+    pivotForeignKey: 'sala_numero',
+    relatedKey: 'matricula',
+    pivotRelatedForeignKey: 'aluno_matricula',
+    pivotTable: 'aluno_sala'
+  })
+  public aluno: ManyToMany<typeof Aluno>
 }
