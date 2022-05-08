@@ -6,11 +6,10 @@ export default class Salas extends BaseSchema {
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
 
-      table.increments('id')
       table.integer('numero').notNullable().unsigned().unique().primary()
       table.integer('capacidade').notNullable().unsigned()
       table.boolean('disponivel').defaultTo(true)
-      table.string('professor_matricula').notNullable().references('professores.matricula')
+      table.string('professor_matricula').notNullable().references('professores.matricula').onDelete('CASCADE');
 
     })
   }
