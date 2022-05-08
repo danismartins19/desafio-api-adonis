@@ -34,7 +34,10 @@ export default class AlunosController {
             })
         }
 
-
+        const aluno = await Aluno.create(data);
+        if(aluno){
+            response.status(201).send(aluno);
+        }
 
         
     }
