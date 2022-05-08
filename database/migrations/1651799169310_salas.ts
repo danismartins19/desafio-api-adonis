@@ -9,7 +9,7 @@ export default class Salas extends BaseSchema {
       table.integer('numero').notNullable().unsigned().unique().primary()
       table.integer('capacidade').notNullable().unsigned()
       table.boolean('disponivel').defaultTo(true)
-      table.string('professor_matricula').notNullable().references('professores.matricula').onDelete('CASCADE');
+      table.string('professor_matricula').notNullable().references('professors.matricula').onDelete('CASCADE');
 
     })
   }

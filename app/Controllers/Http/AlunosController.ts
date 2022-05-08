@@ -20,15 +20,13 @@ export default class AlunosController {
             })
         }
 
-        const emailIsValid = testEmail(data.email); //verifica se email está correto
-        if(!emailIsValid){
+        if(!testEmail(data.email)){
             return response.status(400).send({
                 erro: "E-mail incorreto"
             })
         }
 
-        const dataIsValid = testData(data.data_nasc);
-        if(!dataIsValid){
+        if(!testData(data.data_nasc)){
             return response.status(400).send({
                 erro: "Data de Nascimento incorreta!"
             })
@@ -36,21 +34,72 @@ export default class AlunosController {
 
         const aluno = await Aluno.create(data);
         if(aluno){
-            response.status(201).send(aluno);
+            return response.status(201).send(aluno);
         }
 
         
     }
 
-    public async read( {request} : HttpContextContract) {
-        
+    public async read( {request, response} : HttpContextContract) {
+        const matricula = request.param('matricula');
+
+        const aluno = await Aluno.find(matricula);
+        if(aluno){
+            return response.status(200).send(aluno)
+        } else {
+            return response.status(400).send({
+                erro: "Aluno não encontrado!"
+            })
+        }
     }
 
-    public async update( {request} : HttpContextContract) {
-        
+    public async update( {request, response} : HttpContextContract) {
+        const matricula = request.param('matricula');
+        const data = request.only(['nome', 'email', 'data_nasc']);
+
+        const aluno = await Aluno.find(matricula);
+        if(!aluno){
+            return response.status(400).send({
+                erro: "Aluno não encontrado!"
+            })
+        }
+
+        if(data.data_nasc){
+            if(testData(data.data_nasc)){
+                aluno.data_nasc = data.data_nasc;
+            }
+        }
+
+        if(data.email){
+            if(testEmail(data.email)){
+                aluno.email = data.email;
+            }
+        }
+
+        if(data.nome){
+            aluno.nome = data.nome;
+        }
+
+        const result = await aluno.save();
+
+        return response.status(200).send(result);
+
+
     }
 
-    public async delete( {request} : HttpContextContract) {
-       
+    public async delete( {request, response} : HttpContextContract) {
+        const matricula = request.param('matricula');
+
+        const aluno = await Aluno.find(matricula);
+        if(aluno){
+            aluno.delete();
+            return response.status(200).send({
+                mensagem: "Aluno excluído!"
+            })
+        } else {
+            return response.status(400).send({
+                erro: "Aluno não encontrado!"
+            })
+        }
     }
 }
