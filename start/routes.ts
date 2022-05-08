@@ -20,3 +20,11 @@ Route.group(() => {
   Route.put('/:num', 'SalasController.update')
   Route.delete('/:num', 'SalasController.delete')
 }).prefix('/sala')
+
+// rotas para o professor adicionar um aluno à sala
+
+// rotas para o professor remover um aluno da sala
+
+// permitir que o professor consulte todos os alunos de uma sala
+
+// permitir que o aluno consulte todas as salas que deverá comparecer
