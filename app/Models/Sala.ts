@@ -25,5 +25,5 @@ export default class Sala extends BaseModel {
     pivotRelatedForeignKey: 'aluno_matricula',
     pivotTable: 'aluno_sala'
   })
-  public aluno: ManyToMany<typeof Aluno>
+  public alunos: ManyToMany<typeof Aluno>
 }

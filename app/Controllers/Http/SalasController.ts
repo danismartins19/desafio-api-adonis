@@ -1,4 +1,5 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Aluno from 'App/Models/Aluno';
 import Professor from 'App/Models/Professor';
 import Sala from 'App/Models/Sala';
 
@@ -90,5 +91,50 @@ export default class SalasController {
             mensagem: "Sala excluída com sucesso!"
         })
         
+    }
+
+
+    public async addAluno({request,response}: HttpContextContract){
+        const { num , matricula} = request.params();
+        const data = request.only(['professor'])
+
+        const professorInstance = await Professor.find(data.professor);
+        if(!professorInstance){
+            return response.status(400).send({
+                erro: "Não existe um professor com essa matrícula"
+            })
+        }
+
+        const sala = await Sala.find(num);
+
+        if(!sala){
+            return response.status(400).send({
+                erro: "Não existe uma sala com esse número"
+            })
+        }
+
+        const aluno = await Aluno.find(matricula);
+        if(!aluno){
+            return response.status(400).send({
+                erro: "Não existe um aluno com essa matrícula"
+            })
+        }
+
+        if(sala.professorMatricula !== professorInstance.matricula){
+            return response.status(400).send({
+                erro: "Esse professor não pode adicionar um aluno a esta sala"
+            })
+        }
+
+        try{
+          await sala.related('alunos').attach([aluno.matricula]);
+          const alunoAdded = await sala.related('alunos').query().where('matricula', aluno.matricula)
+          return alunoAdded;
+        } 
+        catch(err) {
+            return response.status(400).send({
+                erro: "Não foi possivel vincular o aluno a essa sala"
+            })
+        }
     }
 }

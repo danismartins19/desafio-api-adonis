@@ -19,6 +19,7 @@ Route.group(() => {
   Route.get('/:num', 'SalasController.read')
   Route.put('/:num', 'SalasController.update')
   Route.delete('/:num', 'SalasController.delete')
+  Route.post('/:num/addAluno/:matricula', 'SalasController.addAluno')
 }).prefix('/sala')
 
 // rotas para o professor adicionar um aluno à sala
