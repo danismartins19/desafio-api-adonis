@@ -5,6 +5,7 @@ Route.group(() => {
   Route.get('/:matricula', 'AlunosController.read')
   Route.put('/:matricula', 'AlunosController.update')
   Route.delete('/:matricula', 'AlunosController.delete')
+  Route.get('/:matricula/listarSalas', 'AlunosController.listarSalas')
 }).prefix('/aluno')
 
 Route.group(() => {
@@ -20,12 +21,7 @@ Route.group(() => {
   Route.put('/:num', 'SalasController.update')
   Route.delete('/:num', 'SalasController.delete')
   Route.post('/:num/addAluno/:matricula', 'SalasController.addAluno')
+  Route.delete('/:num/delAluno/:matricula', 'SalasController.delAluno')
+  Route.get('/:num/verAlunos','SalasController.verAlunos')
 }).prefix('/sala')
 
-// rotas para o professor adicionar um aluno à sala
-
-// rotas para o professor remover um aluno da sala
-
-// permitir que o professor consulte todos os alunos de uma sala
-
-// permitir que o aluno consulte todas as salas que deverá comparecer

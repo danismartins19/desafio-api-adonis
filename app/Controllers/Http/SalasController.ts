@@ -113,6 +113,12 @@ export default class SalasController {
             })
         }
 
+        if(!sala.disponivel){
+            return response.send({
+                message: "Esta sala não está disponivel no momento!"
+            })
+        }
+
         const aluno = await Aluno.find(matricula);
         if(!aluno){
             return response.status(400).send({
@@ -124,6 +130,11 @@ export default class SalasController {
             return response.status(400).send({
                 erro: "Esse professor não pode adicionar um aluno a esta sala"
             })
+        }
+
+        const salaLenght = await sala.related('alunos').query();
+        if(salaLenght.length >= sala.capacidade){
+            return { message: "A sala está cheia!"}
         }
 
         try{
