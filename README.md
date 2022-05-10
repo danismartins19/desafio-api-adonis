@@ -2,7 +2,7 @@
 
 ## Essa API foi feita utilizando Adonis.JS 5, Typescript, e SQLite
 
-### Depois de clonar esse repositório, roda em seu terminal Para instalar todas as dependências do projeto:
+### Depois de clonar esse repositório, execute em seu terminal para instalar todas as dependências do projeto:
 
 `npm install` ou `yarn`
 
