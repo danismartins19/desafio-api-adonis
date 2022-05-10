@@ -68,8 +68,12 @@ export default class SalasController {
             sala.capacidade = data.capacidade
         }
 
-        if(data.disponivel){
-            sala.disponivel = data.disponivel
+        if(data.disponivel === true || data.disponivel === 1){
+            sala.disponivel = true
+        } else if (data.disponivel === false || data.disponivel === 0){
+            sala.disponivel = false
+        } else {
+            console.log('')
         }
 
         const result = await sala.save()
@@ -147,5 +151,58 @@ export default class SalasController {
                 erro: "Não foi possivel vincular o aluno a essa sala"
             })
         }
+    }
+
+    public async delAluno({request, response}: HttpContextContract){
+       const {num , matricula} = request.params();
+
+       const sala = await Sala.find(num);
+       if(!sala){
+           return response.status(400).send({
+               erro: "Não foi encontrada nenhuma sala com esse número"
+           })
+       }
+
+       const aluno = await Aluno.find(matricula);
+       if(!aluno){
+           return response.status(400).send({
+               erro: "Não foi encontrado nenhum aluno com essa matrícula"
+           })
+       }
+
+       try{
+            await sala.related('alunos').detach([aluno.matricula]);
+            return response.status(200).send({
+                message: "Aluno removido da sala"
+            })
+       } catch (err){
+            return response.status(400).send({
+                erro: "Algo deu errado!"
+            })
+       }
+       
+        // 
+    }
+
+    public async verAlunos({request, response}: HttpContextContract){
+        const {num} = request.params();
+
+        const sala = await Sala.find(num);
+        if(!sala){
+            return response.status(400).send({
+                erro: "Não foi encontrada nenhuma sala com esse número"
+            })
+        }
+
+        const alunosSala = await sala.related('alunos').query();
+        if(alunosSala.length == 0){
+            return response.status(200).send({
+                message: "Essa sala não possui alunos!"
+            })
+        } else {
+            return response.status(200).send(alunosSala)
+        }
+
+
     }
 }

@@ -1,5 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Aluno from 'App/Models/Aluno';
+import Professor from 'App/Models/Professor';
 import { testData } from 'App/Utils/testData';
 import { testEmail } from 'App/Utils/testEmail';
 
@@ -102,4 +103,34 @@ export default class AlunosController {
             })
         }
     }
+
+    public async listarSalas ({request, response}:HttpContextContract){
+        const { matricula } = request.params();
+
+        const aluno = await Aluno.find(matricula);
+        if(!aluno){
+            return response.status(400).send({
+                erro: "Não foi encontrado um aluno com essa matrícula!"
+            })
+        }
+
+        let salas = await aluno.related('salas').query().select('numero', 'professor_matricula')
+        if(salas.length == 0){
+            return response.status(200).send({
+                message: "Esse aluno não está em nenhuma sala no momento!"
+            })
+        }
+
+        let newSalas : any[] = [] ;
+        for(let sala of salas){
+            let professor = await Professor.find(sala.$attributes.professorMatricula);
+                newSalas.push({
+                    "numero": sala.$attributes.numero,
+                    "professor": professor?.nome
+                })
+        }
+        return newSalas;
+
+    }
+
 }
